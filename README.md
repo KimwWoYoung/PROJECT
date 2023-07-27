@@ -79,8 +79,6 @@
 
 - PCA 효과 성능 크지 않음 ( xgboost 모델에 했다.)
 - 상관관계 큰 것들 많음. ⇒ 하나씩 열 빼며 성능 비교해봤으나, 뻬면 성능 더 안 좋아졌음.
-- 모든 독립변수 열에서, ‘Sex’열의 2:instant(성체 미성숙)이 가장 작은 수치를 보였으며, 0:m(남자)일수록 가장 높은 수치를 보여줌.
-    
 
 ### EDA 및 각 효과
 
@@ -178,28 +176,23 @@ ML 모델인 XGBoost가 성능이 가장 좋았다. 그 다음으로는, DL 모�
 ### EDA 및 각 효과
 
 - 합칠 수 있는 컬럼 합치기
-    - target columns 7개 ⇒ class라는 1개의 새로운 열에 유형 분류 **(분류하고 다시 원핫인코딩으로 하면 처음이랑 똑같아 지지 않나??)**
     - x_perimeter + y_perimeter = Total_perimeter
     - min, max of Luminosity : mean 값으로 묶기 → 다중공산성 문제 해결
 - 독립변수 데이터 표준화
 - 이상치 제거
-- **target 데이터 불균형 문제 ⇒  `smote` 적용**
-
-![a59c61d0-abb3-4f4f-8de5-ec5688b9c98f.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3fdf204a-9bfd-4ec0-95d6-a4ba0fcb5a58/a59c61d0-abb3-4f4f-8de5-ec5688b9c98f.png)
-
+- **target 데이터 불균형 문제 ⇒  `randomoversampling` 적용**
+![4315693b-9881-47db-b160-f21a2161b414](https://github.com/KimwWoYoung/Team-Project/assets/97582403/dee138b7-fa94-498a-b134-5052fd18a283)
 ⇒ 모든 class를 673개로 고정
+- oversampling, undersampling, smote 적용시 randomoversampling이 성능 가장 good (recall, precision)
+    - smote 와 달리, random oversampling은 새로운 합성데이터를 생성하지 않고, 기존 소수 클래스의 인스턴스를 복제해 정보 보존과 과적합 회피 능력이 있어 가장 적합했던 것으로 보인다.
 
-- oversampling, undersampling, smote 적용시 smote가 성능 가장 good (recall, precision)
-    - 무작위로 oversampling을 수행하는 방법보다 과적합 가능성이 적기 때문
-    - undersampling에 비해 정보가 소실되지 않고, 데이터 수가 줄어들지 않기 때문
 - 수치형 ⇒ category 타입 변환 : TypeOfSteel_A300, TypeOfSteel_A400, Outside_Global_Index
 - 독립변수들의 skewed feature 확인
     - 왜도값이 클수록, 분포가 비대칭적이며, 0에 가까울수록 대칭적으로 분포됨.
     - 왜도값 0.75보다 큰 것은, 정규분포 형태로 변환
+ 
+![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/b15c7958-25d5-4ec0-a38b-8809bdfdf839)
 
-![d943571f-7e97-4ed6-9774-3d0f6df4d29c.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cf05291e-8bc0-42df-90cd-9ca824ee4d19/d943571f-7e97-4ed6-9774-3d0f6df4d29c.png)
-
-![f371023b-a3c5-4d70-b768-bd5d4205ee15.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8f887410-af43-40b8-97b3-5f8092f83e30/f371023b-a3c5-4d70-b768-bd5d4205ee15.png)
 
 - 비대칭 데이터 여전히 존재, 표준화 작업 이후에도 이상치 여전히 존재 → 극단적 이상치 직접 삭제
 - 다중공산성 문제
@@ -208,23 +201,21 @@ ML 모델인 XGBoost가 성능이 가장 좋았다. 그 다음으로는, DL 모�
     - 해결 방법 : VIF 값이 큰 독립변수들 제거하거나, 변수들을 변형시켜 상관관계를 줄이는 전처리 작업
 - feature importance
     
-    ![fd9db41d-ea4a-499f-a4b6-2a74c189b660.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4d4d1faa-51ac-4bdd-936d-10e17953687b/fd9db41d-ea4a-499f-a4b6-2a74c189b660.png)
-    
+
+![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/884ddf5b-3e1f-4076-a5a2-7e942bd5a85d)
+
+
 - cardinality
     
-    ![760a0bec-f123-42bc-b073-06b5ed1d4501.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37f63014-010a-4d78-b39f-7026c78eaac8/760a0bec-f123-42bc-b073-06b5ed1d4501.png)
+![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/9d973d21-c031-468d-acf4-d196541b9b94)
+
     
 - 상관계수 0.95 이상인 열 제거
 - pca, feature selection시, 성능 오히려 떨어짐.
 - **컬럼 축소 더!!!!! (합칠 수 있는 컬럼 있으면 더 합치기)**
 
 > EDA 마친 데이터 개수 : 4020개
-> 
 
-질문
-
-- target columns 7개 ⇒ class라는 1개의 새로운 열에 유형 분류 **(분류하고 다시 원핫인코딩으로 하면 처음이랑 똑같아 지지 않나??)**
-- smote가 가장 성능 좋다고 했는데, 왜 randomoversampler로 했는지??
 
 ### Modeling
 Model		
