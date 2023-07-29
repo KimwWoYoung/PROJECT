@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from imblearn.over_sampling import RandomOverSampler
+from scipy import stats
 
 """
 회귀, 이진 분류, 다중 분류 데이터 불러오기 및 전처리
@@ -11,50 +12,56 @@ def load_dataset_regression():
     """
     회귀 모델 
     """
-    df = pd.read_csv('./data/Regression_data.csv')
+    data = pd.read_csv('./data/Regression_data.csv')
+    # 'Sex' 열을 원-핫 인코딩으로 변환
+    data = pd.get_dummies(data, columns=['Sex'], drop_first=True)
 
-    # sex열 범주형 -> 수치형 변환
-    sex_mapping = {'M':0, 'F':1, 'I':2}
-    df['Sex'] = df['Sex'].map(sex_mapping)
+    # 이상치 제거를 위해 확인할 열 선택
+    columns_to_check = ['Length', 'Diameter', 'Height', 'Whole weight', 'Shucked weight', 'Viscera weight', 'Shell weight', 'Rings']
 
-    # 이상치 제거 (height 열)
-    df.drop(df.Height[df.Height >0.3].index, inplace=True)
-    df.reset_index(drop=True, inplace=True)
+    # z-점수를 이용하여 이상치 제거
+    z_scores = stats.zscore(data[columns_to_check])
+    abs_z_scores = np.abs(z_scores)
+    filtered_entries = (abs_z_scores < 3).all(axis=1)
+    data = data[filtered_entries]
+    df =data
 
     # "전체 무게 >= 조개껍질 벗긴 무게 + 내장 무게 + 껍질 무게"를 만족하지 않는 행들 제거
     df = df[df['Whole weight'] >= df['Shucked weight'] + df['Viscera weight'] + df['Shell weight']]
     df = df.reset_index(drop=True)
-    
     return df
 
 
-
-
-
-# 이진분류
 def load_dataset_binary_classification():
     """
-    이진 분류 : 데이터 불균형 문제 (1 희소)
+    이진 분류: 데이터 불균형 문제 (1 희소)
     """
     df = pd.read_csv('./data/binary_classification_data.csv')
 
-    # Downsampling : Target class
-    # 0: 16259 -> 1870
-    # 1: 1639
-    for i in range(16000):
-        if df['target_class'][i] == 0:  
-            df = df.drop(i)
+    df_1 = df.iloc[:, :-1]
+    standard_scaler = StandardScaler()
+    np_scaled = standard_scaler.fit_transform(df_1)
+    df_norm = pd.DataFrame(np_scaled, columns=list(df_1.columns))
+
+    # 이상치 제거
+    low, high = .05, .95
+    quantiles = df_norm.quantile([low, high])
+    quantile_norm = df_norm.apply(lambda col: col[(col >= quantiles.loc[low, col.name]) &
+                                                 (col <= quantiles.loc[high, col.name])], axis=0)
+    X = df_norm
+    targets = df['target_class']
+    le = LabelEncoder()
+    Y = le.fit_transform(targets)
+    Y = pd.Series(Y, name='target_class')
+
+    df = pd.DataFrame(X, columns=X.columns)
+    df['targets'] = Y
     return df
 
 
 
-# 다중분류 - 나중에 성능 향상시킬 때, 다시 볼 수도 있으니 두 분 것 다 넣겠습니다!
-# 우영님 woo로 표시했고, 강우님 gang으로 함수 뒤에 표시했습니다! (나중에 차차 수정)
 
-def load_dataset_multi_classification_woo(): 
-    """
-    다중 분류 - 우영님
-    """
+def load_dataset_multi_classification(): 
     df = pd.read_csv('./data/mulit_classification_data.csv')
 
     # 컬럼 전처리
@@ -134,102 +141,3 @@ def load_dataset_multi_classification_woo():
     return df
 
 
-def load_dataset_multi_classification_gang():
-    """
-    다중 분류 - 강우님
-    """
-    df = pd.read_csv('./data/mulit_classification_data.csv')
-
-    # 데이터 엔지니어링
-    df_column = ['X_Minimum',                   # X_Minimum, X_Maximum -> X_Point
-                'X_Maximum',                    # //
-                'Y_Minimum',                    # Y_Minimum, Y_Maximum -> Y_Point
-                'Y_Maximum',                    # //
-                'Pixels_Areas',                 # pass
-                'X_Perimeter',                  # pass
-                'Y_Perimeter',                  # pass
-                'Sum_of_Luminosity',            # pass
-                'Minimum_of_Luminosity',        # pass
-                'Maximum_of_Luminosity',        # pass
-                'Length_of_Conveyer',           # 어느 정도 분류가 되지만 현재 정규화로 진행할 예정
-                'TypeOfSteel_A300',             
-                'TypeOfSteel_A400',
-                'Steel_Plate_Thickness',
-                'Edges_Index',
-                'Empty_Index',
-                'Square_Index',
-                'Outside_X_Index',
-                'Edges_X_Index',
-                'Edges_Y_Index',
-                'Outside_Global_Index',
-                'LogOfAreas',
-                'Log_X_Index',
-                'Log_Y_Index',
-                'Orientation_Index',
-                'Luminosity_Index',
-                'SigmoidOfAreas',
-                'Pastry',
-                'Z_Scratch',
-                'K_Scatch',
-                'Stains',
-                'Dirtiness',
-                'Bumps',
-                'Other_Faults'
-                ]
-    
-    
-    # X_Minimum, X_Maximum, Y_Minimum, Y_Maximum 컬럼 X_Point, Y_Point로 반환
-    df_sample = df.copy()
-    
-    df_sample['X_Point'] = (df_sample['X_Maximum'] + df_sample['X_Minimum']) / 2
-    df_sample['Y_Point'] = (df_sample['Y_Maximum'] + df_sample['Y_Minimum']) / 2
-    # df_sample = df_sample.reindex(columns=['X_Point', 'Y_Point'] + df_sample.columns[:-2].tolist())
-    
-    # apply 함수와 lambda 함수를 사용하여 조건에 따라 값 설정
-    df_sample['TypeOfSteel'] = df_sample.apply(lambda row: 1 if row['TypeOfSteel_A300'] == 1
-                                                else (0 if row['TypeOfSteel_A400'] == 1 else 2), axis=1)
-    df_sample.drop(columns=['TypeOfSteel_A300', 'TypeOfSteel_A400'], inplace=True)
-    
-    # 10으로 나눈 결과를 "Thickness_group" 컬럼에 저장
-    df_sample['Steel_Plate_Thickness_10units'] = df_sample['Steel_Plate_Thickness'] // 10
-    df_sample.drop(columns="Steel_Plate_Thickness", inplace=True)
-
-
-    # "Outside_Global_Index" 값을 범주화하여 "Outside_Global_Category" 컬럼에 저장 (한 줄로 작성)
-    df['Outside_Global_Category'] = df['Outside_Global_Index'].map({1.00: 2, 0.50: 1, 0.00: 0})
-
-    edit_column = ["X_Point", "Y_Point",            # 'X_Minimum', 'X_Maximum','Y_Minimum','Y_Maximum',
-                'Pixels_Areas',
-                'X_Perimeter',
-                'Y_Perimeter',
-                'Sum_of_Luminosity',
-                'Minimum_of_Luminosity',
-                'Maximum_of_Luminosity',
-                'Length_of_Conveyer',
-                "TypeOfSteel",                      # 'TypeOfSteel_A300', 'TypeOfSteel_A400',
-                "Steel_Plate_Thickness_10units",    # 'Steel_Plate_Thickness',
-                'Edges_Index',
-                'Empty_Index',
-                'Square_Index',
-                'Outside_X_Index',
-                'Edges_X_Index',
-                'Edges_Y_Index',
-                "Outside_Global_Category",          # 'Outside_Global_Index',
-                'LogOfAreas',
-                'Log_X_Index',
-                'Log_Y_Index',
-                'Orientation_Index',
-                'Luminosity_Index',
-                'SigmoidOfAreas',
-                'Pastry',
-                'Z_Scratch',
-                'K_Scatch',
-                'Stains',
-                'Dirtiness',
-                'Bumps',
-                'Other_Faults'
-                ]
-
-    df_sample = df_sample.reindex(columns=edit_column)
-    
-    return df
