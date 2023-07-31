@@ -1,7 +1,6 @@
 # AI Software Upgrade Project
 
 
-
  ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
  ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
  ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
@@ -29,13 +28,14 @@
 | 김우영| 다중분류 모델링, 분류&회귀 성능 개선, ppt 제작 |
 |김보미| 회귀 모델링, 다중분류 성능 개선, git 관리|
 |이강우| 다중분류 모델링, 프론트엔드 개발|
-|최재용| 분류 모델링, 백엔드 개|
+|최재용| 분류 모델링, 백엔드 개발|
 
 <br>
 <br>
 
 ## Project Process
-ppt 그림넣기
+![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/4039af75-4c8f-4805-8155-c2d276761608)
+
   
 <br>
 <br>
@@ -44,64 +44,34 @@ ppt 그림넣기
 사전에 구축된 AI model은 성능이 부족하여 정확한 예측을 제공하지 못하고, 인터페이스를 가지고 있지 않습니다.
 AI model의 성능 개선과 사용자 친화적인 웹 인터페이스 구축을 통해, 정확한 예측을 제공하는 높은 성능의 AI 서비스를 제공하며, 사욪자들이 쉽게 접근하고 활용할 수 있도록 하여 AI 기술의 보다 넓은 영향력을 발휘합니다.
 
-- 회귀 : 전복의 물리적 특성을 활용하여 전복의 나이를 예측하는 서비스
+![GIFMaker_me](https://github.com/KimwWoYoung/Team-Project/assets/97582403/797a892e-26ee-43a2-8cf2-444346d093f4)
+
+### 회귀 : 전복의 물리적 특성을 활용하여 전복의 나이를 예측하는 서비스
 전복은 전 세계의 차가운 연안 해역에서 발견되며 멸종 위기에 처해있습니다. 
-전복의 나이는 가격과 비례적인 관계가 있어,  전복의 가격을 측정하는 데 중요한 역할을 합니다. 
+**전복의 나이는 가격과 비례적인 관계가 있어,  전복의 가격을 측정하는 데 중요한 역할을 합니다.**
 그러나 전복의 나이를 결정하는 것은 매우 복잡한 작업입니다. 우리의 서비스는 기계 학습 모델을 사용하여 전복의 나이를 예측함으로써 이러한 수동적인 프로세스를 효율적으로 가속화하고자 합니다. 
 이를 통해 보다 정확하고 신속한 전복 연령 예측 서비스를 제공할 수 있습니다.
 
+### 이진 분류 : Pulsar별 유무를 알려주는 서비스
+중성자 별 중에서 Pulsar별 혹은  Pulsar가 아닌 별을 분류하는 모델을 만들고 펄서 별이 확률을 사용자들에게 제공하는 서비스입니다.
+중성자 별들의 특징을 이용해 Pulsar별 혹은 Not Pulsar별을 분류해주며, 그 분류에 따른 확률을 수치적으로 표현해줍니다.
 
-- 분류 : Pulsar별 유무를 알려주는 서비스
-- 다중분류 : 스테인레스 강판의 표면 결함 유형을 분류해주는 서비스
+
+### 다중분류 : 스테인레스 강판의 표면 결함 유형을 분류해주는 서비스
+스테인레스 강판의 표면 결함인 6가지의 가능한 결함과 기타로 정확하게 분류해 주는 모델을 고객에게 제공할 수 있도록 하는 서비스입니다.
+데이터 세트에서 주어진 각각의 결함들은 제작 과정에서 해결 가능한 문제와 추가적으로 발생할 수 있는 불량을 사전에 해결할 수 있는 방안으로 제시할 수 있고, 불량에 직접적으로 연관된 결함을 예측하여 loss를 억제할 수 있습니다.
+<br>
+<br>
+# Data
+* Regression : https://www.kaggle.com/datasets/rodolfomendes/abalone-dataset
+* Binary Classification : https://www.kaggle.com/datasets/brsdincer/pulsar-classification-for-class-prediction
+* Multi Classification : https://www.kaggle.com/datasets/uciml/faulty-steel-plates
 
 <br>
 <br>
 
-# Data 1 - Regression
-### Data
-
-- 조개의 물리적 특성과 연령에 대한 정보가 있다. **조개류는 성장에 따라 ring 수가 증가한다.**
-- 데이터 개수 : 4177개
-- 독립변수 8개, 종속변수 1개
-- Sex : M/F/I(Instant: 성체 미성숙)
-- Length : 길이
-- Diameter : 지름
-- Height : 높이
-- Whole weight : 전체 무게
-- Shucked wieght : 껍질 제거 후 무게
-- Viscera weight : 내장 무게
-- Shell weight : 껍질 무게
-- **Rings (Target Feature) : 조개류의 나이**를 나타낸다.
-
-> **조개 껍데기에 새겨진 성장 줄무늬로 조개 나이를 추정한다.** (나무의 나이테와 비슷한 역할)
-> 
-> - (**비례 관계**) 높이, 껍질 무게, 전체 무게, 지름, 길이가 클수록, 조개 나이가 많아진다.
-> - (**반비례 관계**) 내장 무게, 껍질 벗긴 무게가 작을수록, 조개 나이가 많아진다.
-> 
-> ⇒ 쉽게 말해서, **나이가 든 조개일수록 몸통은 커지나, 내장(이런 안쪽) 부분이 작아진다.**
-> 
-
-### Data Analysis
-
-- PCA 효과 성능 크지 않음 ( xgboost 모델에 했다.)
-- 상관관계 큰 것들 많음. ⇒ 하나씩 열 빼며 성능 비교해봤으나, 뻬면 성능 더 안 좋아졌음.
-
-### EDA 및 각 효과
-
-- sex열 : 범주형 → **onehotencoding** 적용
-- **이상치 제거**
-    - z-score 이용
-        - 효과 : loss 줄어듬.
-        - z-score의 절댓값이 3보다 크면 이상치로 판단하고 제거함.
-    - “전체 무게 >= 조개껍질 벗긴 무게 + 내장 무게 + 껍질 무게"를 만족하지 않는 행들 제거
-        - 효과 : loss 줄어듬.
-
-> EDA 마친 데이터 개수 : 4177개 → 3876개 (301개 제거)
-> 
-
-### 모델 성능 측정
-
-ML 모델인 XGBoost가 성능이 가장 좋았다. 그 다음으로는, DL 모델인, RNN이 성능이 가장 좋다. 
+# Modeling
+### Regression
 
 | Model | MSE | Accuracy | r2_score |
 | --- | --- | --- | --- |
@@ -112,133 +82,47 @@ ML 모델인 XGBoost가 성능이 가장 좋았다. 그 다음으로는, DL 모�
 | Lasso | 4.81 | 0.83 | 0.51 |
 | LightGBM | 4.74 | 0.84 | 0.52 |
 
-모든 모델 모두, gridsearch cv 적용해 hyperparmeter tuning한 수치의 성능임.
 
 <br>
 <br>
 
 
-# Data 2 - Binary Classification
-
-
-
-
-<br>
-<br>
-
-# Data 3  Multi Classification
-### Data
-
-> 7가지 유형의 결함 중 **해당 강판의 결함 유형 분류**
-> 
-> 
-> **⇒ 스테인레스 강판 생산 과정에서 품질 검사 및 결함 분류에 활용**
-> 
-- 데이터 개수 : 1941개
-- 총 32 columns : 독립변수 25개, 종속변수 7개
-    - 'X_Minimum', 'X_Maximum', 'Y_Minimum', 'Y_Maximum' : 결함 영역 내 x, y축의 최대, 최소값
-    - 'Pixels_Areas' : 결함 영역 내 픽셀 개수
-    - 'X_Perimeter', 'Y_Perimeter' : 결함 영역의 x,y축 둘레
-    - 'Sum_of_Luminosity','Minimum_of_Luminosity', 'Maximum_of_Luminosity' : 밝기값 합, 최소, 최대
-    - 'Length_of_Conveyer' : 강판 이동시키는 운반 장치 길이
-    - 'TypeOfSteel_A300', 'TypeOfSteel_A400' : 스테인레스 강판의 종류가 A300인지 A400인지 여부 (0 or 1)
-    - 'Steel_Plate_Thickness' : 스테인레스 강판의 두께
-    - 'Edges_Index', 'Edges_X_Index', 'Edges_Y_Index' : 강판 결험 영역의 가장자리 나타내는 지수, x,y축에 대한 강판 결함 영역의 가장자리를 나타내는 지수
-    - ‘Empty_Index' : 결함 영역 내의 비어있는 영역 지수
-    - ‘Square_Index' : 결함 영역 넓이 지수
-    - 'Outside_X_Index', 'Outside_Global_Index'
-    - 'LogOfAreas', 'Log_X_Index', 'Log_Y_Index' : 결함영역 로그값, x,y축방향으로의 결함 영역 로그값
-    - 'Orientation_Index' : 결함 영역 방향 지수
-    - 'Luminosity_Index' : 결함 영역 밝기 지수
-    - ‘'SigmoidOfAreas' : 결함 영역 넓이에 대한 시그모이드 값
-
-> **Target Columns (7): Pastry, Z_Scratch, K_Scatch, Stains, Dirtiness, Bumps, Other_Faults**
-> 
-> 
-> ⇒ **강판 표면에 생긴 결함의 종류**
-> 
-
-1) **Pastry** : **빵 모양의 파손이 발생**한 결함
-
-2) **Z_Scratch** : **Z자 모양의 스크래치**
-
-3) **K_Scatch : K자 모양의 스크래치**
-
-4) **Stains : 얼룩이나, 얼룩 모양의 더러움이 생긴 결함**
-
-5) **Dirtiness : 더러운 자국이 있는 결함 (**먼지나 오염물)
-
-6) **Bumps** : **덤불 모양으로 돌출된 결함**
-
-7) **Other_Faults :** 위에 언급된 6가지 유형 **외에 다른 종류의 결함**
-
-> 빵 모양, z자, k자, 얼룩, 더러운 자국, 덤불 모양, 그외것 의 결함들이 강판 표면에 있다.
-> 
-
-### Data Analysis
-
-- 
-
-### EDA 및 각 효과
-
-- 합칠 수 있는 컬럼 합치기
-    - x_perimeter + y_perimeter = Total_perimeter
-    - min, max of Luminosity : mean 값으로 묶기 → 다중공산성 문제 해결
-- 독립변수 데이터 표준화
-- 이상치 제거
-- **target 데이터 불균형 문제 ⇒  `randomoversampling` 적용**
-![4315693b-9881-47db-b160-f21a2161b414](https://github.com/KimwWoYoung/Team-Project/assets/97582403/dee138b7-fa94-498a-b134-5052fd18a283)
-⇒ 모든 class를 673개로 고정
-- oversampling, undersampling, smote 적용시 randomoversampling이 성능 가장 good (recall, precision)
-    - smote 와 달리, random oversampling은 새로운 합성데이터를 생성하지 않고, 기존 소수 클래스의 인스턴스를 복제해 정보 보존과 과적합 회피 능력이 있어 가장 적합했던 것으로 보인다.
-
-- 수치형 ⇒ category 타입 변환 : TypeOfSteel_A300, TypeOfSteel_A400, Outside_Global_Index
-- 독립변수들의 skewed feature 확인
-    - 왜도값이 클수록, 분포가 비대칭적이며, 0에 가까울수록 대칭적으로 분포됨.
-    - 왜도값 0.75보다 큰 것은, 정규분포 형태로 변환
- 
-![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/b15c7958-25d5-4ec0-a38b-8809bdfdf839)
-
-
-- 비대칭 데이터 여전히 존재, 표준화 작업 이후에도 이상치 여전히 존재 → 극단적 이상치 직접 삭제
-- 다중공산성 문제
-    - VIF: 다중공산성 평가 지표 : 각 독립변수가 다른 독립변수들과 얼마나 상관관계가 있는지를 나타냄. 값이 1에 가까울 수록, 상관관계가 적어 다중공산성 문제가 적다. 1보다 크면, 클수록 다중공산성 영향이 크다.
-    - 다중공산성 : 각 독립변수가 다른 독립변수들과 얼마나 상관관계가 있는지를 나타냄.
-    - 해결 방법 : VIF 값이 큰 독립변수들 제거하거나, 변수들을 변형시켜 상관관계를 줄이는 전처리 작업
-- feature importance
-    
-
-![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/884ddf5b-3e1f-4076-a5a2-7e942bd5a85d)
-
-
-- cardinality
-    
-![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/9d973d21-c031-468d-acf4-d196541b9b94)
-
-    
-- 상관계수 0.95 이상인 열 제거
-- pca, feature selection시, 성능 오히려 떨어짐.
-- **컬럼 축소 더!!!!! (합칠 수 있는 컬럼 있으면 더 합치기)**
-
-> EDA 마친 데이터 개수 : 4020개
-
-
-### Modeling
-Model		
-(BEST) Random Forest		
-Logistic Regression		
-SVM		
-Neural model		
+# Binary Classification
+Best Model : XGBOOST
+| Metric | precision | recall | f1-score | support |
+| --- | --- | --- | --- | --- |
+| Class 0 | 0.98 | 0.99 | 0.99 | 3256 |
+| Class 1 | 0.91 | 0.82 | 0.86 | 324 |
+| Accuracy |  |  | 0.98 | 3580 |
+| Macro Avg | 0.95 | 0.91 | 0.93 | 3580 |
+| Weighted Avg | 0.98 | 0.98 | 0.98 | 3580 |
 
 
 
 <br>
 <br>
-    
 
+### Multi Classification
+BEST Model : Random Forest
+|    Class    | Precision |  Recall  | F1-Score | support | 
+|-------------|-----------|----------|----------| ------- |
+|      0      |   0.89    |   0.85   |   0.87   | 124 |
+|      1      |   0.99    |   1.00   |   1.00   | 144 |
+|      2      |   0.98    |   0.98   |   0.98   | 126 |
+|      3      |   0.87    |   0.81   |   0.84   | 134 |
+|      4      |   0.94    |   1.00   |   0.97   | 139 |
+|      5      |   0.99    |   1.00   |   1.00   | 134 |
+|      6      |   0.99    |   1.00   |   0.99   | 142 |
+|-------------|-----------|----------|----------| --- |
+|  Accuracy   |           |          |   0.95   | 943 |
+|  Macro Avg  |   0.95    |   0.95   |   0.95   | 943 |
+|Weighted Avg |   0.95    |   0.95   |   0.95   | 943 |
 
-# Web 배포
+RandomForestClassifier: class 조절 정확도 (accuracy) 95.23%
 
+<br>
+<br>
+   
 
 
 
