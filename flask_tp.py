@@ -5,39 +5,55 @@ import tensorflow as tf
 import re
 from sklearn.preprocessing import StandardScaler
 
-app = Flask(__name__)
-loaded_model_regression = pickle.load(open(r".\regression.pkl", "rb"))
-loaded_model_bynary = pickle.load(open(r".\binary.pkl", "rb"))
-loaded_model_multi = pickle.load(open(r".\multi.pkl", "rb"))
+"""
+Flask를 사용하여
+세 가지 다른 모델로 데이터를 예측 및 그 결과를 웹 페이지로 표시 
+localhost:5000에서 동작하도록 구현함.
+"""
 
+app = Flask(__name__)
+
+# loading model
+loaded_model_regression = pickle.load(open('./models/regression.pkl', "rb"))
+loaded_model_bynary = pickle.load(open('./models/binary.pkl', "rb"))
+loaded_model_multi = pickle.load(open('./models/multi.pkl', "rb"))
+
+# 홈페이지 route
 @app.route('/')
 def home():
     return render_template('index.html')
 
+# 프로젝트 소개 페이지 route
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     title = "프로젝트 소개"
     content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu dapibus urna, et rhoncus ipsum. Nulla facilisi. Vestibulum scelerisque ac odio non fermentum. Vivamus nec massa id tellus semper elementum. Duis ullamcorper vestibulum sem, eu dapibus elit consequat eu. Sed nec varius ex, vitae vehicula est. Vestibulum nec metus elit. Vestibulum vel justo vel quam volutpat euismod. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse a lectus lorem. Etiam ullamcorper ligula eget risus dictum varius. Nunc non hendrerit elit."
     return render_template('about.html', title = title, content = content)
 
+# 오류 페이지 route
 @app.route('/error', methods=['POST'])
 def error():
     return render_template('error.html')
 
+# Regression Model route
 @app.route('/regression', methods=['POST'])
 def regression():
     return render_template('regression_data.html')
 
+# Binary-Classification Model route
 @app.route('/bynary', methods=['POST'])
 def bynary():
     return render_template('binary_classification_data.html')
 
+# Multi-Classification Model route
 @app.route('/multi', methods=['POST'])
 def multi():
     return render_template('multi_classification_data.html')
 
+# Regression model predict result route
 @app.route('/predict_reg', methods=['POST'])
 def predict_reg():
+    # input data preprocessing
     sex_value = request.form['column1']
     if sex_value == 'M':
         sex_value = 0
@@ -52,6 +68,8 @@ def predict_reg():
         input_value = request.form.get(input_field)
         if len(input_value) > 0 and not bool(re.search(r'[^0-9.-]', input_value)):
             input_data.append(float(input_value))
+    
+    # predict with preprocessed data, print result
     if len(input_data) != 8:
         return render_template('error.html')
     else:
@@ -63,14 +81,18 @@ def predict_reg():
             predicted_value = round(predicted_value[0])
         return render_template('regression_data.html', predicted_value=predicted_value, input_data=input_data)
 
+# Binary Classification predict result route
 @app.route('/predict_bynary', methods=['POST'])
 def predict_bynary():
+    # input data preprocessing
     input_data = []
     for i in range(1, 9):
         input_field = f'input_data{i}'
         input_value = request.form.get(input_field)
         if len(input_value) > 0 and not bool(re.search(r'[^0-9.-]', input_value)):
             input_data.append(float(input_value))
+
+    # predict with preprocessed data, print result
     if len(input_data) != 8:
         return render_template('error.html')
     else:
@@ -80,8 +102,7 @@ def predict_bynary():
         with open('binary_class_scaler.pkl', 'rb') as f:
             scaler = pickle.load(f)
             input_data = scaler.transform(input_data)
-        # scaler = StandardScaler()
-        # input_data = scaler.fit_transform(input_data)
+
         a = loaded_model_bynary.predict(input_data)
         prediction_proba = loaded_model_bynary.predict_proba(input_data)
         for idx, (pred, proba) in enumerate(zip(loaded_model_bynary.predict(input_data), prediction_proba)):
@@ -99,6 +120,7 @@ def predict_bynary():
             percentage = c
         return render_template('binary_classification_data.html', predicted_value=predicted_value, percentage = percentage, input_data=input_data_test)
 
+# Multi-Classification predict result route
 @app.route('/predict_multi', methods=['POST'])
 def predict_multi():
     input_data = []
@@ -107,9 +129,12 @@ def predict_multi():
         input_value = request.form.get(input_field)
         if len(input_value) > 0 and not bool(re.search(r'[^0-9.-]', input_value)):
             input_data.append(float(input_value))
+
+    # predict with preprocessed data, print result
     if len(input_data) != 27:
         return render_template('error.html')
     else:
+        # 입력 데이터 중 일부 삭제
         del input_data[26]
         del input_data[25]
         del input_data[23]
@@ -131,8 +156,10 @@ def predict_multi():
         input_data = np.array([input_data])
         scaler = StandardScaler()
         input_data = scaler.fit_transform(input_data)
+        
         a = loaded_model_multi.predict(input_data)
         result = "예측 결과"
+        # 갑판 유형 출력 및, 유형에 따른 해결과정 
         if a == 0:
             predicted_value = 'Pastry'
             story = "강판의 표면에 빵 모양의 파손이 발생한 결함을 의미함. 강판 표면이 부서져서 빵처럼 보이는 경우"
