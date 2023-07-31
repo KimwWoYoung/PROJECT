@@ -1,5 +1,5 @@
 # AI Software Upgrade Project
-
+<br>
 
  ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
  ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
@@ -14,6 +14,7 @@
 ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white) ![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white) ![Zoom](https://img.shields.io/badge/Zoom-2D8CFF?style=for-the-badge&logo=zoom&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 
+<br>
 
 
 | project name | AI Software Upgrade Project | 
@@ -22,6 +23,7 @@
 | member | 김우영, 김보미, 이강우, 최재용 | 
 | project keywords | 딥러닝, numpy, 레거시 코드 리펙터링, UIUX 개선, AI 성능 향상 |
 
+<br>
 
 | name | Role | 
 | ---- | ---- |
@@ -33,7 +35,7 @@
 <br>
 <br>
 
-## Project Process
+# Project Process
 ![image](https://github.com/KimwWoYoung/Team-Project/assets/97582403/4039af75-4c8f-4805-8155-c2d276761608)
 
   
@@ -108,7 +110,7 @@ Best Model : XGBOOST
 <br>
 <br>
 
-### Multi Classification
+# Multi Classification
 BEST Model : Random Forest
 |    Class    | Precision |  Recall  | F1-Score | support | 
 |-------------|-----------|----------|----------| ------- |
@@ -125,10 +127,6 @@ BEST Model : Random Forest
 |Weighted Avg |   0.95    |   0.95   |   0.95   | 943 |
 
 RandomForestClassifier: class 조절 정확도 (accuracy) 95.23%
-
-<br>
-<br>
-   
 
 
 
